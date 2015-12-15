@@ -13,8 +13,6 @@ this file and include it in basic-server.js so that it actually works.
 **************************************************************/
 var data = {results: []}
 
-
-
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   //
@@ -46,10 +44,17 @@ var requestHandler = function(request, response) {
 
   if(request.method === 'POST'){
     statusCode = 201;
-    var messageData = request.json;
-    console.log(messageData);
-    data.results.push(messageData);
+
+    request.on('data', function(result){
+      data.results.push(JSON.parse(result));      
+    });
+
   }
+ 
+  if(request.url.search('/classes/') === -1 && request.method === 'GET'){
+    console.log('worked');
+      statusCode = 404;
+    }
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
@@ -63,13 +68,7 @@ var requestHandler = function(request, response) {
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
   
-  // var postBody = {
-  //   user: 'user',
-  //   text: 'a message',
-  //   room: 'lobby'
-  // };
-  console.log(data);
-  console.log(JSON.stringify(data));
+
 
   response.end(JSON.stringify(data));
 };
