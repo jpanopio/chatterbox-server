@@ -48,13 +48,11 @@ var requestHandler = function(request, response) {
     request.on('data', function(result){
       data.results.push(JSON.parse(result));      
     });
-
   }
  
-  if(request.url.search('/classes/') === -1 && request.method === 'GET'){
-    console.log('worked');
+  if(request.url.search('/classes/') === -1 && request.method === 'GET') {
       statusCode = 404;
-    }
+  }
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
@@ -68,8 +66,6 @@ var requestHandler = function(request, response) {
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
   
-
-
   response.end(JSON.stringify(data));
 };
 
