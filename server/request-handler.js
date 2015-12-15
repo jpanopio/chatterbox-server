@@ -46,7 +46,10 @@ var requestHandler = function(request, response) {
     statusCode = 201;
 
     request.on('data', function(result){
-      data.results.push(JSON.parse(result));      
+      result = JSON.parse(result);
+      result.objectId = data.results.length;
+      console.log(result);
+      data.results.push(result);      
     });
   }
  
