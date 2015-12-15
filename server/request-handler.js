@@ -11,6 +11,9 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
+var data = {results: []}
+
+
 
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
@@ -39,7 +42,14 @@ var requestHandler = function(request, response) {
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = "text/plain";
+  headers['Content-Type'] = 'application/json';
+
+  if(request.method === 'POST'){
+    statusCode = 201;
+    var messageData = request.json;
+    console.log(messageData);
+    data.results.push(messageData);
+  }
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
@@ -52,7 +62,16 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  response.end("Hello, World!");
+  
+  // var postBody = {
+  //   user: 'user',
+  //   text: 'a message',
+  //   room: 'lobby'
+  // };
+  console.log(data);
+  console.log(JSON.stringify(data));
+
+  response.end(JSON.stringify(data));
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
@@ -70,4 +89,7 @@ var defaultCorsHeaders = {
   "access-control-allow-headers": "content-type, accept",
   "access-control-max-age": 10 // Seconds.
 };
+
+exports.requestHandler = requestHandler;
+exports.defaultCorsHeaders = defaultCorsHeaders;
 
